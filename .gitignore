@@ -1,6 +1,6 @@
 *.pyc
 /tests/*.pyc
-/quantipy/*.pyc
+/weightipy/*.pyc
 /tests/StackName.stack
 /tests/ChainName.chain
 /tests/ClusterName.cluster

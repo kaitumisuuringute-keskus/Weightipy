@@ -1,10 +1,6 @@
-import pdb;
 import unittest
-import os.path
-import numpy
-import pandas as pd
-from quantipy.core.weights.rim import Rim
-from quantipy.core.weights.weight_engine import WeightEngine
+
+from weightipy.rim import Rim
 
 
 class TestScheme(unittest.TestCase):

@@ -215,7 +215,7 @@ VIEW_GROUPS_1 = dict(block_expanded_counts='freq',
 FORMATS_1 = dict(bg_color_freq='gray')
 
 IMAGE_1 = dict(img_name='logo',
-               img_url='./quantipy/core/builds/excel/formats/logo/qplogo_invert.png',
+               img_url='./weightipy/core/builds/excel/formats/logo/qplogo_invert.png',
                img_size=[110, 120],
                img_insert_x=4,
                img_insert_y=0,

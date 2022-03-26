@@ -1,2 +1,0 @@
-recursive-include savReaderWriter *
-recursive-include quantipy/core/tools/dp *

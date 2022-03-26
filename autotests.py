@@ -1,9 +1,9 @@
 import os
 import sys
 import time
-import logging
-from watchdog.observers import Observer
+
 from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
 
 """
     The autotests.py runs the tests if any files change in the ./core/ folder.
@@ -24,8 +24,8 @@ from watchdog.events import FileSystemEventHandler
 
 class TestHandler(FileSystemEventHandler):
     def on_modified(self, event):
-        print "Changes detected..."
-        print "Running tests..."
+        print("Changes detected...")
+        print("Running tests...")
         os.system('python -m unittest discover')
 #        os.system('coverage run -m unittest discover')
 
