@@ -29,3 +29,4 @@ setup(name='weightipy',
       packages=find_packages(exclude=['tests']),
       include_package_data=True,
       install_requires=INSTALL_REQUIRES)
+
