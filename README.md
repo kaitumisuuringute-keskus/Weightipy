@@ -24,7 +24,7 @@ Note that the package is called __weightipy__ on pip.
 
 #### Create a virtual envirionment
 
-If you want to create a virtual environment when using Quantipy:
+If you want to create a virtual environment when using Weightipy:
 
 conda
 ```python
@@ -36,12 +36,12 @@ with venv
 python -m venv [your_env_name]
  ```
 
-## 5-minutes to Quantipy
+## 5-minutes to Weightipy
 
 **Get started**
 
 #### Weighting
-If your data hasn't been weighted yet, you can use Quantipy's RIM weighting algorithm.
+If your data hasn't been weighted yet, you can use Weightipy's RIM weighting algorithm.
 
 Assuming we have the variables `gender` and `agecat` we can weight the dataset with these two variables:
 
@@ -56,7 +56,7 @@ dataset.weight(scheme,unique_key='respondentId',
                weight_name="my_weight",
                inplace=True)
 ```
-Quantipy will show you a weighting report:
+Weightipy will show you a weighting report:
 ```
 Weight variable       weights_gender_and_age
 Weight group                  _default_name_
@@ -73,11 +73,11 @@ Weight factor ratio                13.283522
 
 # Contributing
 
-The test suite for Quantipy can be run with the command
+The test suite for Weightipy can be run with the command
 
 `python3 -m pytest tests`
 
-But when developing a specific aspect of Quantipy, it might be quicker to run (e.g. for the DataSet)
+But when developing a specific aspect of Weightipy, it might be quicker to run (e.g. for the DataSet)
 
 `python3 -m unittest tests.test_rim`
 
