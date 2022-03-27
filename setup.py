@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 
+from pathlib import Path
+
 from setuptools import setup, find_packages
+
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
 
 versions = dict()
 
@@ -28,5 +33,8 @@ setup(name='weightipy',
       author_email='kaitumisuuringute.keskus@gmail.com',
       packages=find_packages(exclude=['tests']),
       include_package_data=True,
-      install_requires=INSTALL_REQUIRES)
+      install_requires=INSTALL_REQUIRES,
+      long_description=long_description,
+      long_description_content_type='text/markdown'
+)
 
