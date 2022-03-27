@@ -45,16 +45,21 @@ If your data hasn't been weighted yet, you can use Quantipy's RIM weighting algo
 
 Assuming we have the variables `gender` and `agecat` we can weight the dataset with these two variables:
 
-```
-from weightipy.core.weights.rim import Rim
+```Python
+import weightipy as wp
 
 age_targets = {'agecat':{1:5.0, 2:30.0, 3:26.0, 4:19.0, 5:20.0}}
 gender_targets = {'gender':{0:49, 1:51}}
-scheme = Rim('gender_and_age')
+scheme = wp.Rim('gender_and_age')
 scheme.set_targets(targets=[age_targets, gender_targets])
-dataset.weight(scheme,unique_key='respondentId',
-               weight_name="my_weight",
-               inplace=True)
+
+df_weighted = wp.weight_dataframe(
+    df=my_df,
+    scheme=scheme,
+    weight_column="weights"
+)
+efficiency = wp.weighting_efficiency(df_weighted["weights"])
+
 ```
 Quantipy will show you a weighting report:
 ```

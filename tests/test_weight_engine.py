@@ -4,6 +4,7 @@ import numpy
 import numpy as np
 import pandas as pd
 
+from weightipy import weight_dataframe, weighting_efficiency
 from weightipy.rim import Rim
 from weightipy.weight_engine import WeightEngine
 
@@ -175,6 +176,16 @@ class TestEngine(unittest.TestCase):
             weight_scheme = self.engine_A._df['weights_' + key]
             boolean_vector = (weight_scheme == np.ones(len(weight_scheme)))
             self.assertFalse(boolean_vector.all())
+
+    def test_weight_dataframe_function(self):
+        df = self.engine_A._df
+        dfw = weight_dataframe(df, self.scheme_A2, "weights_")
+        self.assertTrue("weights_" in dfw.columns)
+        boolean_vector = (dfw["weights_"] == np.ones(len(dfw)))
+        self.assertFalse(boolean_vector.all())
+        efficiency = weighting_efficiency(dfw["weights_"])
+        self.assertTrue(efficiency < 100)
+        self.assertTrue(efficiency > 20)
 
     def test_add_scheme_no_key(self):
         self.engine_A.add_scheme(scheme=self.scheme_A1, key='identity', verbose=False)
