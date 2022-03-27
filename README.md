@@ -66,7 +66,7 @@ Or by using the underlying functions that will give more access to reports etc:
 ...
 
 my_df["identity"] = range(len(my_df))
-engine = WeightEngine(data=df)
+engine = wp.WeightEngine(data=df)
 engine.add_scheme(scheme=scheme, key="identity", verbose=False)
 engine.run()
 df_weighted = engine.dataframe()
