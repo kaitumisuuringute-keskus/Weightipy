@@ -61,8 +61,21 @@ df_weighted = wp.weight_dataframe(
 efficiency = wp.weighting_efficiency(df_weighted["weights"])
 
 ```
-Weightipy will show you a weighting report:
-```
+Or by using the underlying functions that will give more access to reports etc:
+```Python
+...
+
+my_df["identity"] = range(len(my_df))
+engine = WeightEngine(data=df)
+engine.add_scheme(scheme=scheme, key="identity", verbose=False)
+engine.run()
+df_weighted = engine.dataframe()
+col_weights = f"weights_{scheme.name}"
+
+efficiency = wp.weighting_efficiency(df_weighted[col_weights])
+
+print(engine.get_report())
+
 Weight variable       weights_gender_and_age
 Weight group                  _default_name_
 Weight filter                           None
