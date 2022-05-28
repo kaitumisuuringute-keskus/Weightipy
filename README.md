@@ -2,6 +2,11 @@
 
 Weightipy is a cut down version of [Quantipy3](https://github.com/Quantipy/quantipy3) for weighting people data using the RIM (iterative raking) algorithm.
 
+### Planned features
+- Support for multithreaded weighting
+- Support for more weighting algorithms
+- Rewrite of the API to be less oriented towards how Quantipy worked and more in line with simple weighting needs
+
 #### Origins
 - Quantipy was concieved of and instigated by Gary Nelson: http://www.datasmoothie.com
 
