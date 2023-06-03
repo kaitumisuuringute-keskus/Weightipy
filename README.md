@@ -112,6 +112,14 @@ Weight factor ratio                13.283522
 
 Overview of functions to get started:
 
+| Function             | Description                                                                                                                                                                                                                                  |
+|----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| weight_dataframe     | Weights data by scheme, returns modified dataframe with new weight column.                                                                                                                                                                   |
+| weighting_efficiency | Takes weights and returns efficiency of weighting. See: https://quantipy.readthedocs.io/en/staging-develop/sites/lib_doc/weights/03_diags.html#the-weighting-efficiency                                                                      |
+| scheme_from_dict     | Turns a dict of dicts into a Rim scheme. Keys of the dict are column names and the values are distributions. These are normalized.                                                                                                           |
+| scheme_from_df       | Creates a Rim scheme from a dataframe from specified weighting columns and frequency column. Useful when working with census data.                                                                                                           |
+| Rim class            | Useful for creation of more complex weighting schemas. For example when weighting subregions or groups, which require filters. See: https://quantipy.readthedocs.io/en/staging-develop/sites/lib_doc/weights/02_rim.html#using-the-rim-class |
+| WeightEngine class   | Useful for more specialised manipulation of the weighting process                                                                                                                                                                            |
 
 # Contributing
 

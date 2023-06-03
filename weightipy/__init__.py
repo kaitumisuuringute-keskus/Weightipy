@@ -9,6 +9,17 @@ from weightipy.weight_engine import WeightEngine
 
 
 def weight_dataframe(df: pd.DataFrame, scheme: Rim, weight_column="weights") -> pd.DataFrame:
+    """
+    Weight a dataframe using a Rim scheme.
+
+    Args:
+        df:
+        scheme:
+        weight_column:
+
+    Returns:
+
+    """
     df = df.copy()
     df["__identity__"] = range(len(df))
 
