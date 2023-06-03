@@ -148,6 +148,8 @@ class Rim:
             self._scale_total()
         for group in self.groups:
             filter_def = self.groups[group][self._FILTER_DEF]
+            if "summary" not in self.groups[group]['report']:
+                break
             try:
                 if filter_def is not None:
                     self.groups[group]['report']['summary']['Total: weighted'] = \
@@ -621,5 +623,6 @@ class Rake:
                 if self.verbose:
                     print('Raking converged in %s iterations' % iteration)
                     print('Generating report')
-                    self.generate_report()
+        if self.verbose:
+            self.generate_report()
         return self.iteration_counter
