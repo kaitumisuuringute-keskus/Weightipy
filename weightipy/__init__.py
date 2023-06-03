@@ -38,13 +38,13 @@ def weighting_efficiency(weights: pd.Series) -> float:
     return (sws / len(weights)) / ssw * 100
 
 
-def schema_from_dict(
+def scheme_from_dict(
         distributions: Dict[str, Dict[Any, Union[float, int]]],
         name: Optional[str] = None,
         rim_params: Optional[Dict] = None
 ) -> Rim:
     """
-    Create a Rim schema from a dictionary of distributions. The dictionary should be in the format
+    Create a Rim scheme from a dictionary of distributions. The dictionary should be in the format
     {dimension: {value: proportion}}. The proportions should be in percentages, e.g. 0.5 for 50%.
 
     This function is useful for simple schemas, where filters are not needed. For more complex schemas,
@@ -80,7 +80,7 @@ def schema_from_dict(
     )
     return schema
 
-def schema_from_df(
+def scheme_from_df(
         df: pd.DataFrame,
         cols_weighting: List[str],
         col_freq: str,
@@ -88,7 +88,7 @@ def schema_from_df(
         rim_params: Optional[Dict] = None
 ) -> Rim:
     """
-    Create a Rim schema from a dataframe.
+    Create a Rim scheme from a dataframe.
     The dataframe should have columns for the dimensions to be weighted,
     and a column with the frequency of each row.
 
@@ -110,7 +110,7 @@ def schema_from_df(
         dist = df[[col, col_freq]].groupby(col).sum()[col_freq].to_dict()
         distributions[col] = dist
 
-    return schema_from_dict(
+    return scheme_from_dict(
         distributions=distributions,
         name=name,
         rim_params=rim_params
