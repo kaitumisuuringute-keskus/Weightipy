@@ -110,16 +110,17 @@ Maximum weight factor               6.187700
 Weight factor ratio                13.283522
 ```
 
+Overview of functions to get started:
+
+
 # Contributing
 
 The test suite for Weightipy can be run with the command
 
 `python3 -m pytest tests`
 
-But when developing a specific aspect of Weightipy, it might be quicker to run (e.g. for the DataSet)
+But when developing a specific aspect of Weightipy, it might be quicker to run (e.g. for the Rim class)
 
 `python3 -m unittest tests.test_rim`
-
-Tests for unsupported features are skipped, [see here for what tests are supported](SupportedFeaturesPython3.md).
 
 We welcome volunteers and supporters. Please include a test case with any pull request, especially those that run calculations.
