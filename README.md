@@ -50,6 +50,24 @@ Assuming we have the variables `gender` and `agecat` we can weight the dataset w
 ```Python
 import weightipy as wp
 
+targets = {
+    "agecat": {"18-24": 5.0, "25-34": 30.0, "35-49": 26.0, "50-64": 19.0, "65+": 20.0},
+    "gender": {"Male": 49, "Female": 51}
+}
+scheme = wp.scheme_from_dict(targets)
+
+df_weighted = wp.weight_dataframe(
+    df=my_df,
+    scheme=scheme,
+    weight_column="weights"
+)
+efficiency = wp.weighting_efficiency(df_weighted["weights"])
+```
+
+Or if we want more control of the raking process, we can use the Rim class directly:
+```Python
+import weightipy as wp
+
 age_targets = {'agecat':{1:5.0, 2:30.0, 3:26.0, 4:19.0, 5:20.0}}
 gender_targets = {'gender':{0:49, 1:51}}
 scheme = wp.Rim('gender_and_age')
@@ -61,8 +79,9 @@ df_weighted = wp.weight_dataframe(
     weight_column="weights"
 )
 efficiency = wp.weighting_efficiency(df_weighted["weights"])
-
 ```
+
+
 Or by using the underlying functions that will give more access to reports etc:
 ```Python
 ...
