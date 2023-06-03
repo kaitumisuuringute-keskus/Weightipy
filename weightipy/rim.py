@@ -621,5 +621,5 @@ class Rake:
                 if self.verbose:
                     print('Raking converged in %s iterations' % iteration)
                     print('Generating report')
-        self.generate_report()
+                    self.generate_report()
         return self.iteration_counter
