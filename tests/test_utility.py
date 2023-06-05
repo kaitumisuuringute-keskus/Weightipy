@@ -1,5 +1,6 @@
 import unittest
 
+import numpy as np
 import pandas as pd
 
 from weightipy.rim import Rim
@@ -28,3 +29,19 @@ class TestUtility(unittest.TestCase):
         df = weight_dataframe(df, schema)
         eff = weighting_efficiency(df["weights"])
         self.assertLess(abs(eff - 100.0), 1.0)
+
+    def test_complex_schema_from_df(self):
+        df = pd.read_csv("./tests/Example Data (A).csv")
+        df["n"] = (np.random.random(len(df)) - 0.5) / 1.0 + 1.0
+        df["gender"] = df["gender"].astype(str)
+        schema = scheme_from_df(
+            df,
+            cols_weighting=["age"],
+            col_filter="gender",
+            col_freq="n"
+        )
+        df = weight_dataframe(df, schema, verbose=True)
+        eff = weighting_efficiency(df["weights"])
+        self.assertNotEqual(eff, 100.0)
+        self.assertGreater(eff, 95.0)
+        self.assertTrue(df["weights"].isna().mean() == 0.0)

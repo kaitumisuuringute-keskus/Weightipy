@@ -28,7 +28,7 @@ def version_libs(libs, precisions, versions):
 INSTALL_REQUIRES = version_libs(libs, precisions, versions)
 
 setup(name='weightipy',
-      version='0.2.0',
+      version='0.3.0',
       author='Remi Sebastian Kits',
       author_email='kaitumisuuringute.keskus@gmail.com',
       packages=find_packages(exclude=['tests']),

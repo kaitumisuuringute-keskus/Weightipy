@@ -15,9 +15,11 @@ class Rim:
                  dropna=True,
                  impute_method="mean",
                  weight_column_name=None,
-                 total=0):
+                 total=0,
+                 verbose=False):
 
         # Default var init
+        self.verbose = verbose
         self.name = name
         self.type = "Rim"
         self.target_cols = []
@@ -177,7 +179,9 @@ class Rim:
                         max_iterations = self.max_iterations,
                         _use_cap=self._use_cap(),
                         cap=self.cap,
-                        anesrake_cap_correction=self.anesrake_cap_correction)
+                        anesrake_cap_correction=self.anesrake_cap_correction,
+                        verbose=self.verbose
+            )
             self.groups[group][self._ITERATIONS_] = rake.start()
             self._df.loc[rake.dataframe.index, wgt] = rake.dataframe[wgt]
             self.groups[group][self._REPORT] = rake.report
@@ -269,8 +273,14 @@ class Rim:
 
     def report(self, group=None):
         """
-        TODO: Docstring
+        Returns the report for the specified group or all groups if no group is specified.
+
+        Requires verbose to be set to True on the Rim class. This is disabled by default
+        for performance reasons.
         """
+        if not self.verbose:
+            raise ValueError("Verbose must evaluate to True on the Rim class to generate a report."
+                             "This is disabled by default for performance reasons.")
         report = {}
         if group is None:
             for group in self.groups:
