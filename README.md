@@ -2,17 +2,10 @@
 
 Weightipy is a cut down version of [Quantipy3](https://github.com/Quantipy/quantipy3) for weighting people data using the RIM (iterative raking) algorithm.
 
-### Planned features
-- Support for multithreaded weighting
-- Support for more weighting algorithms
-- Rewrite of the API to be less oriented towards how Quantipy worked and more in line with simple weighting needs
-
-#### Origins
-- Quantipy was concieved of and instigated by Gary Nelson: http://www.datasmoothie.com
-
-#### Contributors
-- Alexander Buchhammer, Alasdair Eaglestone, James Griffiths, Kerstin Müller : https://yougov.co.uk
-- Datasmoothie’s Birgir Hrafn Sigurðsson and [Geir Freysson](http://www.twitter.com/@geirfreysson): http://www.datasmoothie.com
+### Changes from Quantipy
+- Removed all quantipy overhead. Weightipy supports the latest versions of Pandas and Numpy and is tested for Python 3.7, 3.8, 3.9, 3.10 and 3.11.
+- Weightipy runs up to 6 times faster than Quantipy, depending on the dataset.
+- Rim class will not generate reports like Quantipy did, unless the parameter verbose is set to True on the Rim constructor.
 
 ## Installation
 
@@ -21,8 +14,6 @@ Weightipy is a cut down version of [Quantipy3](https://github.com/Quantipy/quant
 or
 
 `python3 -m pip install weightipy`
-
-Note that the package is called __weightipy__ on pip.
 
 #### Create a virtual envirionment
 
@@ -42,10 +33,7 @@ python -m venv [your_env_name]
 
 **Get started**
 
-#### Weighting
-If your data hasn't been weighted yet, you can use Weightipy's RIM weighting algorithm.
-
-Assuming we have the variables `gender` and `agecat` we can weight the dataset with these two variables:
+Assuming we have the variables `gender` and `agecat` we can weight the dataset like this:
 
 ```Python
 import weightipy as wp
@@ -64,27 +52,40 @@ df_weighted = wp.weight_dataframe(
 efficiency = wp.weighting_efficiency(df_weighted["weights"])
 ```
 
-Or if we want more control of the raking process, we can use the Rim class directly:
+In case we are working with census data, which also includes a region variable and we would
+like to weight the data by age and gender in each region, we can use the `scheme_from_df` function:
 ```Python
 import weightipy as wp
+import pandas as pd
 
-age_targets = {'agecat':{1:5.0, 2:30.0, 3:26.0, 4:19.0, 5:20.0}}
-gender_targets = {'gender':{0:49, 1:51}}
-scheme = wp.Rim('gender_and_age')
-scheme.set_targets(targets=[age_targets, gender_targets])
+df_data = pd.read_csv("data_to_weight.csv")
+df_census = pd.read_csv("census_data.csv")
 
+scheme = wp.scheme_from_df(
+    df=df_census,
+    cols_weighting=["agecat", "gender"],
+    col_filter="region",
+    col_freq="freq"
+)
 df_weighted = wp.weight_dataframe(
-    df=my_df,
+    df=d,
     scheme=scheme,
     weight_column="weights"
 )
 efficiency = wp.weighting_efficiency(df_weighted["weights"])
 ```
 
-
-Or by using the underlying functions that will give more access to reports etc:
+Or by using the underlying functions that will give more access to the weighting process, we
+can use the Rim and WeightEngine classes directly:
 ```Python
-...
+import weightipy as wp
+
+# in this example, agecat and gender are int dtype
+
+age_targets = {'agecat':{1:5.0, 2:30.0, 3:26.0, 4:19.0, 5:20.0}}
+gender_targets = {'gender':{0:49, 1:51}}
+scheme = wp.Rim('gender_and_age')
+scheme.set_targets(targets=[age_targets, gender_targets])
 
 my_df["identity"] = range(len(my_df))
 engine = wp.WeightEngine(data=df)
@@ -110,6 +111,9 @@ Maximum weight factor               6.187700
 Weight factor ratio                13.283522
 ```
 
+For more references on the underlying classes, refer to the Quantipy 
+[documentation](https://quantipy.readthedocs.io/en/staging-develop/sites/lib_doc/weights/02_rim.html#using-the-rim-class)
+
 Overview of functions to get started:
 
 | Function             | Description                                                                                                                                                                                                                                  |
@@ -120,6 +124,14 @@ Overview of functions to get started:
 | scheme_from_df       | Creates a Rim scheme from a dataframe from specified weighting columns and frequency column. Useful when working with census data.                                                                                                           |
 | Rim class            | Useful for creation of more complex weighting schemas. For example when weighting subregions or groups, which require filters. See: https://quantipy.readthedocs.io/en/staging-develop/sites/lib_doc/weights/02_rim.html#using-the-rim-class |
 | WeightEngine class   | Useful for more specialised manipulation of the weighting process                                                                                                                                                                            |
+
+## Planned features
+- More utility functions to simplify the weighting process
+- More performance improvements, in order to better support batch weighting of many datasets
+- Support for multithreaded weighting (possibly using Polars)
+- Rewrite of the API to be less oriented towards how Quantipy worked and more in line with simple weighting needs
+- Far future: Support for more weighting algorithms
+
 
 # Contributing
 
@@ -132,3 +144,13 @@ But when developing a specific aspect of Weightipy, it might be quicker to run (
 `python3 -m unittest tests.test_rim`
 
 We welcome volunteers and supporters. Please include a test case with any pull request, especially those that run calculations.
+
+# Quantipy
+
+#### Origins
+- Quantipy was concieved of and instigated by Gary Nelson: http://www.datasmoothie.com
+
+
+### Contributors on Quantipy
+- Alexander Buchhammer, Alasdair Eaglestone, James Griffiths, Kerstin Müller : https://yougov.co.uk
+- Datasmoothie’s Birgir Hrafn Sigurðsson and [Geir Freysson](http://www.twitter.com/@geirfreysson): http://www.datasmoothie.com
