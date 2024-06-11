@@ -142,8 +142,8 @@ class Rim:
 
     def _compute(self):
         self._get_base_factors()
-        self._df[self._weight_name()].replace(0.00, 1.00, inplace=True)
-        self._df[self._weight_name()].replace(-1.00, np.NaN, inplace=True)
+        self._df[self._weight_name()] = self._df[self._weight_name()].replace(0.00, 1.00)
+        self._df[self._weight_name()] = self._df[self._weight_name()].replace(-1.00, np.NaN)
         if list(self._group_targets.keys()):
             self._adjust_groups()
         if self.total > 0 and not list(self._group_targets.keys()):
@@ -316,7 +316,7 @@ class Rim:
         columns = self._columns(add_columns=[key_column])
         columns.extend(all_filter_cols)
         df = df.copy()[columns]
-        df[self._weight_name()].replace(0, np.NaN, inplace=True)
+        df[self._weight_name()] = df[self._weight_name()].replace(0, np.NaN)
         df.dropna(subset=[self._weight_name()], inplace=True)
         return df
 
@@ -484,6 +484,8 @@ class Rake:
         self.dataframe = dataframe
         self.weight_column_name = weight_column_name
 
+        self.dataframe[self.weight_column_name] = 1.0
+
         self.cap = cap
         self.anesrake_cap_correction = anesrake_cap_correction
         self._use_cap = _use_cap
@@ -621,7 +623,7 @@ class Rake:
             diff_error = sum(abs(self.dataframe[self.weight_column_name]-old_weights))
 
         self.iteration_counter = iteration  # for the report
-        self.dataframe[self.weight_column_name].replace(0.00, 1.00, inplace=True)
+        self.dataframe[self.weight_column_name] = self.dataframe[self.weight_column_name].replace({0.0: 1.0})
 
         if iteration == self.max_iterations:
             print('Convergence did not occur in %s iterations' % iteration)
