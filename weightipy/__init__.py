@@ -9,6 +9,38 @@ from weightipy.version import version as __version__
 from weightipy.weight_engine import WeightEngine
 
 
+def weight(df: pd.DataFrame, scheme: Rim, verbose=False) -> pd.Series:
+    """
+    Weight a dataframe using a Rim scheme. The dataframe must have
+    a column for each dimension in the scheme. String columns are
+    automatically converted to categorical, allowing easier processing.
+
+    Args:
+        df:
+        scheme:
+
+    Returns:
+
+    """
+    df = df.copy()
+    df["__identity__"] = range(len(df))
+
+    # Convert weight columns to categories
+    cols_weight = []
+    for _, group in scheme.groups.items():
+        for d in group["targets"]:
+            col = list(d.keys())[0]
+            cols_weight.append(col)
+
+    for col in cols_weight:
+        df[col] = df[col].astype("category")
+
+    engine = WeightEngine(data=df)
+    engine.add_scheme(scheme=scheme, key="__identity__", verbose=verbose)
+    engine.run()
+    df_weighted = engine.dataframe()
+    return df_weighted[f"weights_{scheme.name}"]
+
 def weight_dataframe(df: pd.DataFrame, scheme: Rim, weight_column="weights", verbose=False) -> pd.DataFrame:
     """
     Weight a dataframe using a Rim scheme. The dataframe must have
@@ -151,13 +183,13 @@ def scheme_from_df(
             df_filter = df[df[col_filter] == u]
             filter_total = df_filter[col_freq].sum()
 
-            targets = {}
+            targets = []
 
             for wcol in cols_weighting:
                 dist = df_filter[[wcol, col_freq]].groupby(wcol).sum()[col_freq] / filter_total * 100
                 dist = dist.to_dict()
 
-                targets[wcol] = dist
+                targets.append({wcol: dist})
 
             # use pandas query to define filter
             if isinstance(u, str):
