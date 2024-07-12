@@ -4,7 +4,7 @@ Weightipy is a cut down version of [Quantipy3](https://github.com/Quantipy/quant
 
 ### Changes from Quantipy
 - Removed all quantipy overhead. Weightipy supports the latest versions of Pandas and Numpy and is tested for Python 3.7, 3.8, 3.9, 3.10 and 3.11.
-- Weightipy runs up to 6 times faster than Quantipy, depending on the dataset.
+- Weightipy runs up to 60x faster than Quantipy, depending on the dataset.
 - Rim class will not generate reports like Quantipy did, unless the parameter verbose is set to True on the Rim constructor.
 
 ## Installation
@@ -89,7 +89,7 @@ scheme.set_targets(targets=[age_targets, gender_targets])
 
 my_df["identity"] = range(len(my_df))
 engine = wp.WeightEngine(data=df)
-engine.add_scheme(scheme=scheme, key="identity", verbose=False)
+engine.add_scheme(scheme=scheme, key="identity", verbose=True)
 engine.run()
 df_weighted = engine.dataframe()
 col_weights = f"weights_{scheme.name}"
@@ -119,10 +119,12 @@ Overview of functions to get started:
 | Function             | Description                                                                                                                                                                                                                                  |
 |----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | weight_dataframe     | Weights data by scheme, returns modified dataframe with new weight column.                                                                                                                                                                   |
+| weight     | Weights data by scheme, returns the weights as a pandas Series.                                                                                                                                                            |
 | weighting_efficiency | Takes weights and returns efficiency of weighting. See: https://quantipy.readthedocs.io/en/staging-develop/sites/lib_doc/weights/03_diags.html#the-weighting-efficiency                                                                      |
 | scheme_from_dict     | Turns a dict of dicts into a Rim scheme. Keys of the dict are column names and the values are distributions. These are normalized.                                                                                                           |
 | scheme_from_df       | Creates a Rim scheme from a dataframe from specified weighting columns and frequency column. Useful when working with census data.                                                                                                           |
-| Rim class            | Useful for creation of more complex weighting schemas. For example when weighting subregions or groups, which require filters. See: https://quantipy.readthedocs.io/en/staging-develop/sites/lib_doc/weights/02_rim.html#using-the-rim-class |
+| Rim class            | Useful for creation of more complex weighting schemas. For example when weighting subregions o
+r groups, which require filters. See: https://quantipy.readthedocs.io/en/staging-develop/sites/lib_doc/weights/02_rim.html#using-the-rim-class |
 | WeightEngine class   | Useful for more specialised manipulation of the weighting process                                                                                                                                                                            |
 
 ## Planned features
