@@ -7,7 +7,7 @@ from itertools import zip_longest, product
 from itertools import chain as ichain
 from operator import add
 
-NAN = np.NaN
+NAN = np.nan
 AST = '*'
 EMPTY = ''
 

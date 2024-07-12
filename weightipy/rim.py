@@ -101,7 +101,6 @@ class Rim:
                 self.target_cols.append(list(target.keys())[0])
             self.groups[gn][self._TARGETS] = targets
 
-
     def add_group(self, name=None, filter_def=None, targets=None):
         """
         Set weight groups using flexible filter and target defintions.
@@ -143,7 +142,7 @@ class Rim:
     def _compute(self):
         self._get_base_factors()
         self._df[self._weight_name()] = self._df[self._weight_name()].replace(0.00, 1.00)
-        self._df[self._weight_name()] = self._df[self._weight_name()].replace(-1.00, np.NaN)
+        self._df[self._weight_name()] = self._df[self._weight_name()].replace(-1.00, np.nan)
         if list(self._group_targets.keys()):
             self._adjust_groups()
         if self.total > 0 and not list(self._group_targets.keys()):
@@ -200,13 +199,12 @@ class Rim:
 
     def _scale_total(self):
         weight_var = self._weight_name()
-        self._df[weight_var].replace(1.00, np.NaN, inplace=True)
+        self._df[weight_var].replace(1.00, np.nan, inplace=True)
         unw_total = len(self._df[weight_var].dropna().index)
-        self._df[weight_var].replace(np.NaN, 0.00, inplace=True)
+        self._df[weight_var].replace(np.nan, 0.00, inplace=True)
         scale_factor = float(unw_total) / float(self.total)
         self._df[weight_var] = self._df[weight_var] / scale_factor
         self._df[weight_var].replace(0.00, 1.00, inplace=True)
-
 
     def _adjust_groups(self):
         adj_w_vec = []
@@ -226,7 +224,6 @@ class Rim:
             adj_w_vec.append(ratio)
         adj_w_vec = pd.concat(adj_w_vec).dropna()
         self._df[self._weight_name()] = adj_w_vec
-
 
     def _get_group_filter_cols(self, filter_def):
         filter_cols = []
@@ -316,7 +313,7 @@ class Rim:
         columns = self._columns(add_columns=[key_column])
         columns.extend(all_filter_cols)
         df = df.copy()[columns]
-        df[self._weight_name()] = df[self._weight_name()].replace(0, np.NaN)
+        df[self._weight_name()] = df[self._weight_name()].replace(0, np.nan)
         df.dropna(subset=[self._weight_name()], inplace=True)
         return df
 
@@ -382,7 +379,7 @@ class Rim:
         """
 
         some_nans = '*** Warning: Scheme "{0}", group "{1}" ***\n'\
-                    'np.NaN found in weight variables:\n{2}\n'\
+                    'np.nan found in weight variables:\n{2}\n'\
                     'Please check if weighted results are acceptable!\n'
 
         len_err_less = '*** Warning: Scheme "{0}", group "{1}" ***\nTargets for variable '\
@@ -448,7 +445,6 @@ class Rim:
                 if not np.allclose(np.sum(list(target_props)), 100.0):
                     raise ValueError(sum_err.format(self.name, group,
                                     target_col, np.sum(target_props)))
-
 
     def validate(self):
         """
@@ -528,18 +524,25 @@ class Rake:
         if cap < 1.5 and _use_cap:
             print("Cap is very low, the model may take a long time to run.")
 
-    def rakeonvar(self, target):
+    def rakeonvar(self, target, weights: np.array):
+        target_values = list(target.values())[0]
         target_col = list(target.keys())[0]
-        for target_code, target_prop in list(target.values())[0].items():
+
+        for target_code, target_prop in target_values.items():
+            index_array = self._cache_indices[(target_col, target_code)]
+            if index_array.shape[0] == 0:
+                continue
             if target_prop == 0.00:
                 target_prop = 0.00000001
+
             try:
-                df = self.dataframe[(self.dataframe[target_col] == target_code)]
-                index_array = (self.dataframe[target_col] == target_code)
-                data = df[self.weight_column_name] * (target_prop / sum(df[self.weight_column_name]))
-                self.dataframe.loc[index_array, self.weight_column_name] = data
+                multiplier = target_prop / weights[index_array].sum()
+                weights[index_array] *= multiplier
             except:
                pass
+
+        return weights
+
 
     def calc_weight_efficiency(self):
         numerator = 100*sum(self.dataframe[self.weight_column_name] *
@@ -585,6 +588,18 @@ class Rake:
         diff_error = 999999
         diff_error_old = 99999999999
 
+        self._cache_indices = {}
+        for target in self.targets:
+            target_values = list(target.values())[0]
+            target_col = list(target.keys())[0]
+
+            for target_code, target_prop in target_values.items():
+                key = (target_col, target_code)
+                index_array = (self.dataframe[target_col] == target_code)
+                # ignore pandas index, use numpy index
+                index_array = np.where(index_array)[0]
+                self._cache_indices[key] = index_array
+
         #cap (this needs more rigorous testings)
         if isinstance(self.cap, (list, tuple)):
             min_cap = self.cap[0]
@@ -598,29 +613,33 @@ class Rake:
             if min_cap is not None:
                 min_cap -= 0.0001
 
+        weights = self.dataframe[self.weight_column_name].values
+
         for iteration in range(1, self.max_iterations+1):
-            old_weights = self.dataframe[self.weight_column_name].copy()
+            old_weights = weights.copy()
 
             if not diff_error < pct_still * diff_error_old:
                 break
 
             for target in self.targets:
-                self.rakeonvar(target)
+                weights = self.rakeonvar(target, weights)
 
             if self._use_cap:
-
                 if min_cap is None:
-                    while self.dataframe[self.weight_column_name].max() > max_cap:
-                        self.dataframe.loc[self.dataframe[self.weight_column_name] > max_cap, self.weight_column_name] = max_cap
-                        self.dataframe[self.weight_column_name] = self.dataframe[self.weight_column_name]/np.mean(self.dataframe[self.weight_column_name])
+                    while weights.max() > max_cap:
+                        weights[weights > max_cap] = max_cap
+                        weights = weights / np.mean(weights)
                 else:
-                    while (self.dataframe[self.weight_column_name].min() < min_cap) or (self.dataframe[self.weight_column_name].max() > max_cap):
-                        self.dataframe.loc[self.dataframe[self.weight_column_name] < min_cap, self.weight_column_name] = min_cap
-                        self.dataframe.loc[self.dataframe[self.weight_column_name] > max_cap, self.weight_column_name] = max_cap
-                        self.dataframe[self.weight_column_name] = self.dataframe[self.weight_column_name]/np.mean(self.dataframe[self.weight_column_name])
+                    while (weights.min() < min_cap) or (weights.max() > max_cap):
+                        weights[weights < min_cap] = min_cap
+                        weights[weights > max_cap] = max_cap
+                        weights = weights / np.mean(weights)
 
             diff_error_old = diff_error
-            diff_error = sum(abs(self.dataframe[self.weight_column_name]-old_weights))
+            diff_error = np.sum(np.abs(weights - old_weights))
+
+        del self._cache_indices
+        self.dataframe[self.weight_column_name] = weights
 
         self.iteration_counter = iteration  # for the report
         self.dataframe[self.weight_column_name] = self.dataframe[self.weight_column_name].replace({0.0: 1.0})

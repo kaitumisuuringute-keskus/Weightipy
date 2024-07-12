@@ -3,11 +3,7 @@ import re
 import pandas as pd
 
 
-#from weightipy.core.dataset import DataSet
-
-
 class WeightEngine:
-
     def __init__(self,
                  data=None,
                  dropna=True):
