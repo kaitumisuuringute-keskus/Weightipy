@@ -1,6 +1,3 @@
-Here is the updated `examples/nested-schemas.md`. I have inserted a detailed section for **Using Tidy/Long Aggregate Data** (`scheme_from_long_df`) as Section 2, complete with a data visualization and explanation of how the nesting logic works for aggregates.
-
-```markdown
 # Nested (Segmented) Weighting
 
 Standard RIM weighting tries to fit the global distribution of a dataset to specific targets. However, this can fail when demographic distributions vary significantly between subgroups (e.g., Region or Ethnicity).
@@ -273,4 +270,3 @@ print("\n--- Ethnicity A Distribution ---")
 print(compare(df_census[df_census['ethnicity']=='A'], df_survey[df_survey['ethnicity']=='A']).to_markdown())
 ```
 </details>
-```
