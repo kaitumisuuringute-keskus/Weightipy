@@ -1,156 +1,202 @@
 # Weightipy
 
-Weightipy is a cut down version of [Quantipy3](https://github.com/Quantipy/quantipy3) for weighting people data using the RIM (iterative raking) algorithm.
+Weightipy is a modernized, lightweight, and high-performance library for weighting survey data using the RIM (iterative raking) algorithm. It is a streamlined fork of [Quantipy3](https://github.com/Quantipy/quantipy3).
 
-### Changes from Quantipy
-- Removed all quantipy overhead. Weightipy supports the latest versions of Pandas and Numpy and is tested for Python 3.7, 3.8, 3.9, 3.10 and 3.11.
-- Weightipy runs up to 6 times faster than Quantipy, depending on the dataset.
-- Rim class will not generate reports like Quantipy did, unless the parameter verbose is set to True on the Rim constructor.
+### Why Weightipy?
+- **Fast:** Runs up to 6x faster than Quantipy.
+- **Modern:** Supports Python 3.7+ and the latest Pandas/Numpy versions.
+- **Flexible:** Supports simple raking, segmented (nested) weighting, and loading targets from various census data formats.
+- **Lightweight:** Removed heavy dependencies and reporting overhead to focus purely on the weighting engine.
+
+---
 
 ## Installation
 
-`pip install weightipy`
-
-or
-
-`python3 -m pip install weightipy`
-
-#### Create a virtual envirionment
-
-If you want to create a virtual environment when using Weightipy:
-
-conda
-```python
-conda create -n envwp python=3
+```bash
+pip install weightipy
 ```
 
-with venv
+## Quick Start
+
+Weightipy creates a new column of weights that aligns your dataset's distribution with specific targets.
+
+### 1. Simple Weighting (Manual Dictionary)
+If you have a simple list of percentages, you can define them in a dictionary.
+
 ```python
-python -m venv [your_env_name]
- ```
-
-## 5-minutes to Weightipy
-
-**Get started**
-
-Assuming we have the variables `gender` and `agecat` we can weight the dataset like this:
-
-```Python
-import weightipy as wp
-
-targets = {
-    "agecat": {"18-24": 5.0, "25-34": 30.0, "35-49": 26.0, "50-64": 19.0, "65+": 20.0},
-    "gender": {"Male": 49, "Female": 51}
-}
-scheme = wp.scheme_from_dict(targets)
-
-df_weighted = wp.weight_dataframe(
-    df=my_df,
-    scheme=scheme,
-    weight_column="weights"
-)
-efficiency = wp.weighting_efficiency(df_weighted["weights"])
-```
-
-In case we are working with census data, which also includes a region variable and we would
-like to weight the data by age and gender in each region, we can use the `scheme_from_df` function:
-```Python
 import weightipy as wp
 import pandas as pd
 
-df_data = pd.read_csv("data_to_weight.csv")
-df_census = pd.read_csv("census_data.csv")
+# Your survey data
+df = pd.read_csv("my_survey.csv")
+
+# Define targets (percentages)
+targets = {
+    "age_group": {"18-24": 10.0, "25+": 90.0},
+    "gender": {"Male": 49.0, "Female": 51.0}
+}
+
+# Create schema and weight
+scheme = wp.scheme_from_dict(targets)
+df_weighted = wp.weight_dataframe(df, scheme, weight_column="weights")
+
+# Check efficiency
+eff = wp.weighting_efficiency(df_weighted["weights"])
+print(f"Weighting Efficiency: {eff:.2f}%")
+```
+
+### 2. Segmented Weighting (Nested)
+A common requirement is to weight specific groups differently (e.g., weight Age and Gender *within* Region, while also correcting the size of the Regions themselves).
+
+You can now do this in a single step using a **Segmented Scheme**:
+
+```python
+targets = {
+    "segment_by": "region",
+    "segment_targets": {"North": 40.0, "South": 60.0}, # Global proportions
+    "segments": {
+        "North": {
+            "age_group": {"18-24": 15.0, "25+": 85.0},
+            "gender": {"Male": 50.0, "Female": 50.0}
+        },
+        "South": {
+            "age_group": {"18-24": 10.0, "25+": 90.0},
+            "gender": {"Male": 48.0, "Female": 52.0}
+        }
+    }
+}
+
+scheme = wp.scheme_from_dict(targets)
+df_weighted = wp.weight_dataframe(df, scheme)
+```
+
+---
+
+## Working with Census Data
+
+Manually typing targets is tedious. Weightipy provides tools to generate schemas directly from census tables or reference datasets.
+
+### Scenario A: You have "Tidy/Long" Aggregates
+*Common with US Census API, Eurostat, tidycensus, or SQL exports.*
+
+If your target data looks like this:
+
+| Region | Variable | Category | Count |
+|:-------|:---------|:---------|:------|
+| East   | Age      | 18-24    | 500   |
+| East   | Gender   | Male     | 450   |
+
+Use `scheme_from_long_df`:
+
+```python
+df_census = pd.read_csv("census_long_format.csv")
+
+scheme = wp.scheme_from_long_df(
+    df=df_census,
+    col_variable="Variable", # Column containing 'Age', 'Gender'
+    col_category="Category", # Column containing '18-24', 'Male'
+    col_value="Count",       # Column containing the population count
+    col_filter="Region"      # Optional: Split schema by Region
+)
+
+df_weighted = wp.weight_dataframe(df, scheme)
+```
+
+### Scenario B: You have Reference Data (Wide/Detailed)
+*Common when you have a "Golden Standard" dataset, a detailed frequency table of all combinations, or raw microdata.*
+
+If your target data looks like this (one row per combination, or one row per combination of demographic variables):
+
+| Region | Age   | Gender | Population_Count |
+|:-------|:------|:-------|:-----------------|
+| East   | 18-24 | Male   | 250              |
+| East   | 18-24 | Female | 260              |
+
+Use `scheme_from_df`. Weightipy will group and sum the data to calculate the correct distributions.
+
+```python
+df_reference = pd.read_csv("census_detailed.csv")
 
 scheme = wp.scheme_from_df(
-    df=df_census,
-    cols_weighting=["agecat", "gender"],
-    col_filter="region",
-    col_freq="freq"
+    df=df_reference,
+    cols_weighting=["Age", "Gender"],
+    col_freq="Population_Count",
+    col_filter="Region"  # Optional: Weight Age/Gender within Region
 )
-df_weighted = wp.weight_dataframe(
-    df=d,
-    scheme=scheme,
-    weight_column="weights"
-)
-efficiency = wp.weighting_efficiency(df_weighted["weights"])
+
+df_weighted = wp.weight_dataframe(df, scheme)
 ```
 
-Or by using the underlying functions that will give more access to the weighting process, we
-can use the Rim and WeightEngine classes directly:
-```Python
-import weightipy as wp
+---
 
-# in this example, agecat and gender are int dtype
+## Data Validation
 
-age_targets = {'agecat':{1:5.0, 2:30.0, 3:26.0, 4:19.0, 5:20.0}}
-gender_targets = {'gender':{0:49, 1:51}}
-scheme = wp.Rim('gender_and_age')
-scheme.set_targets(targets=[age_targets, gender_targets])
+Before applying weights, it is highly recommended to validate that your survey data aligns with your schema. Weightipy can detect critical errors (e.g., a category exists in the census but is missing in the survey) and warnings (e.g., targets not summing to 100%).
 
-my_df["identity"] = range(len(my_df))
-engine = wp.WeightEngine(data=df)
-engine.add_scheme(scheme=scheme, key="identity", verbose=False)
-engine.run()
-df_weighted = engine.dataframe()
-col_weights = f"weights_{scheme.name}"
+```python
+# Get a report of all issues (does not raise exception)
+report = wp.validate_scheme_dict(df, targets, raise_error=False)
 
-efficiency = wp.weighting_efficiency(df_weighted[col_weights])
+if not report.empty:
+    print(report)
+    # Columns: [group, variable, issue_type, severity, details]
 
-print(engine.get_report())
-
-Weight variable       weights_gender_and_age
-Weight group                  _default_name_
-Weight filter                           None
-Total: unweighted                 582.000000
-Total: weighted                   582.000000
-Weighting efficiency               60.009826
-Iterations required                14.000000
-Mean weight factor                  1.000000
-Minimum weight factor               0.465818
-Maximum weight factor               6.187700
-Weight factor ratio                13.283522
+# Or strict validation (raises ValueError on Critical errors)
+wp.validate_scheme_dict(df, targets, raise_error=True)
 ```
 
-For more references on the underlying classes, refer to the Quantipy 
-[documentation](https://quantipy.readthedocs.io/en/staging-develop/sites/lib_doc/weights/02_rim.html#using-the-rim-class)
+---
 
-Overview of functions to get started:
+## Serialization & Advanced Usage
 
-| Function             | Description                                                                                                                                                                                                                                  |
-|----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| weight_dataframe     | Weights data by scheme, returns modified dataframe with new weight column.                                                                                                                                                                   |
-| weighting_efficiency | Takes weights and returns efficiency of weighting. See: https://quantipy.readthedocs.io/en/staging-develop/sites/lib_doc/weights/03_diags.html#the-weighting-efficiency                                                                      |
-| scheme_from_dict     | Turns a dict of dicts into a Rim scheme. Keys of the dict are column names and the values are distributions. These are normalized.                                                                                                           |
-| scheme_from_df       | Creates a Rim scheme from a dataframe from specified weighting columns and frequency column. Useful when working with census data.                                                                                                           |
-| Rim class            | Useful for creation of more complex weighting schemas. For example when weighting subregions or groups, which require filters. See: https://quantipy.readthedocs.io/en/staging-develop/sites/lib_doc/weights/02_rim.html#using-the-rim-class |
-| WeightEngine class   | Useful for more specialised manipulation of the weighting process                                                                                                                                                                            |
+For advanced workflows—such as manual overrides, multi-threading, or network transmission—it is often better to work with the raw configuration dictionary rather than the `Rim` class directly.
 
-## Planned features
-- More utility functions to simplify the weighting process
-- More performance improvements, in order to better support batch weighting of many datasets
-- Support for multithreaded weighting (possibly using Polars)
-- Rewrite of the API to be less oriented towards how Quantipy worked and more in line with simple weighting needs
-- Far future: Support for more weighting algorithms
+Weightipy exposes the intermediate extraction functions for this purpose. These return a JSON-serializable dictionary.
 
+```python
+# 1. Extract raw dictionary from data
+config = wp.scheme_dict_from_df(df_census, cols_weighting=..., col_freq=...)
 
-# Contributing
+# 2. Modify manually (e.g., fix a specific target)
+config['segments']['North']['age_group']['18-24'] = 12.5
 
-The test suite for Weightipy can be run with the command
+# 3. Serialize (safe for network or threading)
+import json
+payload = json.dumps(config)
 
-`python3 -m pytest tests`
+# 4. Reconstruct Scheme later/elsewhere
+scheme = wp.scheme_from_dict(config)
+```
 
-But when developing a specific aspect of Weightipy, it might be quicker to run (e.g. for the Rim class)
+---
 
-`python3 -m unittest tests.test_rim`
+## API Reference
 
-We welcome volunteers and supporters. Please include a test case with any pull request, especially those that run calculations.
+| Function | Description |
+|:---|:---|
+| `weight_dataframe` | Main entry point. Weights data by a scheme and appends a weight column. |
+| `weight_df` | Alias to weight_dataframe |
+| `weighting_efficiency` | Calculates the efficiency of the weights (Kish's effective sample size). |
+| `scheme_from_dict` | Creates a scheme from a python dictionary. Supports both simple (flat) and segmented (nested) structures. |
+| `scheme_from_long_df` | Creates a scheme from "Tidy" aggregate data (Variable/Category/Value columns). |
+| `scheme_from_df` | Creates a scheme from a reference dataframe (Microdata or Detailed Aggregates). |
+| `scheme_dict_from_df` | Extracts the raw configuration dictionary from a reference dataframe. Useful for debugging, manual adjustments, or serialization. |
+| `scheme_dict_from_long_df` | Extracts the raw configuration dictionary from Tidy/Long data. |
+| `validate_scheme_dict` | Validates a survey dataframe against a scheme dictionary. Checks for missing categories, NaNs, and target sums. |
+| `validate_scheme` | Validates a survey dataframe against a compiled `Rim` object. |
+| `Rim` | The underlying class for defining complex schemas. |
+| `WeightEngine` | The engine that runs the iterative algorithm. Useful for advanced manipulation. |
 
-# Quantipy
+## Contributing
 
-#### Origins
-- Quantipy was concieved of and instigated by Gary Nelson: http://www.datasmoothie.com
+We welcome volunteers!
 
+*   **Run Tests:** `python3 -m pytest tests`
+*   **Development:** Please include a test case with any pull request.
 
-### Contributors on Quantipy
-- Alexander Buchhammer, Alasdair Eaglestone, James Griffiths, Kerstin Müller : https://yougov.co.uk
-- Datasmoothie’s Birgir Hrafn Sigurðsson and [Geir Freysson](http://www.twitter.com/@geirfreysson): http://www.datasmoothie.com
+## Origins & Credits
+
+Weightipy is based on **Quantipy**.
+
+*   **Quantipy Creator:** Gary Nelson (Datasmoothie)
+*   **Contributors:** Alexander Buchhammer, Alasdair Eaglestone, James Griffiths, Kerstin Müller (YouGov), Birgir Hrafn Sigurðsson, Geir Freysson.

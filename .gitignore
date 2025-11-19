@@ -41,3 +41,12 @@ docs/API/_templates/
 .pytest_cache/*
 .mypy_cache/*
 build
+
+.venv/*
+venv/*
+.venv
+venv
+
+*.pclprof
+
+.idea
