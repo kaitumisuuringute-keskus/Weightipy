@@ -3,7 +3,7 @@ import unittest
 import numpy as np
 import pandas as pd
 
-from weightipy.rim import Rim
+from weightipy.internal.rim import Rim
 from weightipy import scheme_from_long_df, weight_dataframe, scheme_from_dict, weighting_efficiency, scheme_from_df
 
 class TestUtility(unittest.TestCase):

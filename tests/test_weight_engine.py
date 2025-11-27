@@ -5,8 +5,8 @@ import numpy as np
 import pandas as pd
 
 from weightipy import weight_dataframe, weighting_efficiency
-from weightipy.rim import Rim
-from weightipy.weight_engine import WeightEngine
+from weightipy.internal.rim import Rim
+from weightipy.internal.weight_engine import WeightEngine
 
 
 class TestEngine(unittest.TestCase):
