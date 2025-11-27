@@ -3,7 +3,7 @@
 # builds currrently don't support python 3.8, need to update pandas first to more than 0.25
 # then we'll add this to the build python-version: [3.5, 3.6, 3.7, 3.8]
 
-name: Python package
+name: Python Test Matrix
 
 on:
   push:

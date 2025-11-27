@@ -21,7 +21,7 @@ jobs:
       
       - name: Install dependencies
         run: |
-          pip install mkdocs-material mkdocstrings[python]
+          pip install mkdocs-shadcn mkdocstrings[python]
       
       - name: Deploy to GitHub Pages
         run: mkdocs gh-deploy --force

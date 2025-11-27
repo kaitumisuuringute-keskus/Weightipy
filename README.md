@@ -2,6 +2,12 @@
 
 Weightipy is a modernized, lightweight, and high-performance library for weighting survey data using the RIM (iterative raking) algorithm. It is a streamlined fork of [Quantipy3](https://github.com/Quantipy/quantipy3).
 
+[![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
+[![License: Apache 2.0](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Documentation](https://img.shields.io/badge/docs-mkdocs-blue.svg)](https://kaitumisuuringute-keskus.github.io/weightipy/)
+[![Coverage](https://kaitumisuuringute-keskus.github.io/weightipy/badges/coverage.svg)](https://github.com/kaitumisuuringute-keskus/weightipy/actions)
+[![Tests](https://github.com/kaitumisuuringute-keskus/weightipy/workflows/Python%20Test%20Matrix/badge.svg)](https://github.com/kaitumisuuringute-keskus/weightipy/actions)
+
 ### Why Weightipy?
 - **Fast:** Runs up to 6x faster than Quantipy.
 - **Modern:** Supports Python 3.7+ and the latest Pandas/Numpy versions.
