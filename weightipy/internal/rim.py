@@ -8,6 +8,7 @@ weighting schemes and the Rake class for executing the iterative algorithm.
 """
 
 import re
+from typing import Optional
 import warnings
 
 import numpy as np
@@ -43,7 +44,7 @@ class Rim:
         self._group_targets = {}
 
         # Storage of weight (sub-)dataframe
-        self._df = None
+        self._df: Optional[pd.DataFrame] = None
 
         # Impute methods parameters
         self.dropna = dropna
@@ -149,8 +150,10 @@ class Rim:
         self.groups[gn][self._FILTER_DEF] = filter_def
         self.groups[gn][self._FILTER_DEF_ORG] = filter_def
 
-    @deprecated("Internal API; will be removed in Weightipy 0.5.")
     def _compute(self):
+        """
+        Internal API; will be removed in Weightipy 0.5.
+        """
         self._get_base_factors()
         self._df[self._weight_name()] = self._df[self._weight_name()].replace(0.00, 1.00)
         self._df[self._weight_name()] = self._df[self._weight_name()].replace(-1.00, np.nan)
@@ -178,8 +181,8 @@ class Rim:
                 warnings.warn(warn)
         return self._df[self._weight_name()]
 
-    @deprecated("Internal API; will be removed in Weightipy 0.5.")
     def _get_base_factors(self):
+        """Internal API; will be removed in Weightipy 0.5."""
         wgt = self._weight_name()
         for group in self.groups:
             wdf = self._get_wdf(group)
@@ -209,8 +212,8 @@ class Rim:
         self._df.loc[filter_idx, wgt] = -1.00
         return None
 
-    @deprecated("Internal API; will be removed in Weightipy 0.5.")
     def _scale_total(self):
+        """Internal API; will be removed in Weightipy 0.5."""
         weight_var = self._weight_name()
         self._df[weight_var].replace(1.00, np.nan, inplace=True)
         unw_total = len(self._df[weight_var].dropna().index)
@@ -219,8 +222,8 @@ class Rim:
         self._df[weight_var] = self._df[weight_var] / scale_factor
         self._df[weight_var].replace(0.00, 1.00, inplace=True)
 
-    @deprecated("Internal API; will be removed in Weightipy 0.5.")
     def _adjust_groups(self):
+        """Internal API; will be removed in Weightipy 0.5."""
         adj_w_vec = []
         for group in self.groups:
             w_vec = self._df.query(self.groups[group][self._FILTER_DEF])[self._weight_name()]
@@ -250,8 +253,8 @@ class Rim:
     def _get_group_target_cols(self, targets):
         return [list(target.keys())[0] for target in targets]
 
-    @deprecated("Internal API; will be removed in Weightipy 0.5.")
     def _get_wdf(self, group):
+        """Internal API; will be removed in Weightipy 0.5."""
         filters = self.groups[group][self._FILTER_DEF]
         targets = self.groups[group][self._TARGETS]
         target_vars = self._get_group_target_cols(targets)
@@ -266,8 +269,8 @@ class Rim:
         wdf = wdf[selected_cols].dropna()
         return wdf
 
-    @deprecated("Internal API; will be removed in Weightipy 0.5.")
     def _dropna(self):
+        """Internal API; will be removed in Weightipy 0.5."""
         if self.dropna:
             self._df.dropna(inplace=True)
         else:
@@ -284,9 +287,10 @@ class Rim:
                 elif method == "mode":
                     self._df[column].fillna(self._df[column].mode()[0], inplace=True)
 
-    @deprecated("Internal API; will be removed in Weightipy 0.5.")
     def report(self, group=None):
         """
+        Internal API; will be removed in Weightipy 0.5.
+
         Return the report for the specified group or all groups.
 
         Requires verbose to be set to True on the Rim class. This is disabled by default
@@ -332,8 +336,8 @@ class Rim:
                                        for filter_col in sublist]))
         return scheme_filter_cols
 
-    @deprecated("Internal API; will be removed in Weightipy 0.5.")
     def _minimize_columns(self, df, key, verbose=True):
+        """Internal API; will be removed in Weightipy 0.5."""
         self._df = df.copy()
         filter_cols = self._get_scheme_filter_cols()
         columns = list(set([key] + self.target_cols + filter_cols))
@@ -341,8 +345,8 @@ class Rim:
         self._df[self._weight_name()] = np.zeros(len(self._df))
         self._check_targets(verbose)
 
-    @deprecated("Internal API; will be removed in Weightipy 0.5.")
     def dataframe(self, df, key_column=None):
+        """Internal API; will be removed in Weightipy 0.5."""
         all_filter_cols = self._get_scheme_filter_cols()
         columns = self._columns(add_columns=[key_column])
         columns.extend(all_filter_cols)
@@ -412,9 +416,10 @@ class Rim:
     def _empty_target_list(self):
         return {list_item: [] for list_item in self.target_cols}
 
-    @deprecated("Internal API; will be removed in Weightipy 0.5.")
     def _check_targets(self, verbose):
         """
+        Internal API; will be removed in Weightipy 0.5.
+
         Check correct weight variable input proportion lengths and sum of 100.
         """
 
@@ -486,9 +491,10 @@ class Rim:
                     raise ValueError(sum_err.format(self.name, group,
                                     target_col, np.sum(target_props)))
 
-    @deprecated("Internal API; will be removed in Weightipy 0.5.")
     def validate(self):
         """
+        Internal API; will be removed in Weightipy 0.5.
+
         Generate summary on scheme target variables to detect and handle missing data.
 
         Returns
