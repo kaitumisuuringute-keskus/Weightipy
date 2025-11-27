@@ -19,20 +19,24 @@ def scheme_from_dict(
     Supports two formats:
     
     1. Simple Scheme (Flat):
-       {
-         "age": {"18-24": 10, "25+": 90},
-         "gender": {"M": 48, "F": 52}
-       }
+    ```
+    {
+        "age": {"18-24": 10, "25+": 90},
+        "gender": {"M": 48, "F": 52}
+    }
+    ```
        
     2. Segmented Scheme (Nested):
-       {
-         "segment_by": "region",
-         "segment_targets": {"A": 30, "B": 70},
-         "segments": {
-            "A": { "age": {...}, "gender": {...} },
-            "B": { ... }
-         }
-       }
+    ```
+    {
+        "segment_by": "region",
+        "segment_targets": {"A": 30, "B": 70},
+        "segments": {
+        "A": { "age": {...}, "gender": {...} },
+        "B": { ... }
+        }
+    }
+    ```
 
     Parameters
     ----------
@@ -123,7 +127,9 @@ def scheme_dict_from_df(
     and you want to calculate targets dynamically based on its distributions.
 
     Expected Input Format (Microdata):
+
     | Age   | Gender | Region | Weight/Freq |
+    |-------|--------|--------|-------------|
     | 18-24 | Male   | East   | 1.0         |
     | 25-34 | Female | East   | 1.0         |
     | 65+   | Male   | West   | 2.5         |
@@ -200,7 +206,9 @@ def scheme_dict_from_long_df(
     than individual rows.
     
     Expected Input Format:
+
     | Variable | Category | Value | (Optional Filter/Region) |
+    |----------|----------|-------|--------------------------|
     | Age      | 18-24    | 500   | East                     |
     | Gender   | Male     | 480   | East                     |
 
@@ -291,7 +299,9 @@ def scheme_from_df(
     and you want to calculate targets dynamically based on its distributions.
 
     Expected Input Format (Microdata):
+
     | Age   | Gender | Region | Weight/Freq |
+    |-------|--------|--------|-------------|
     | 18-24 | Male   | East   | 1.0         |
     | 25-34 | Female | East   | 1.0         |
     | 65+   | Male   | West   | 2.5         |
@@ -347,7 +357,9 @@ def scheme_from_long_df(
     than individual rows.
     
     Expected Input Format:
+
     | Variable | Category | Value | (Optional Filter/Region) |
+    |----------|----------|-------|--------------------------|
     | Age      | 18-24    | 500   | East                     |
     | Gender   | Male     | 480   | East                     |
 

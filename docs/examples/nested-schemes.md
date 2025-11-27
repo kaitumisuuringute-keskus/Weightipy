@@ -20,6 +20,7 @@ Nested weighting creates independent weighting groups for each slice (Ethnicity)
 The easiest way to handle this is if you have a "Census" or "Golden Standard" dataframe. This dataframe should contain the demographic combinations and a frequency column.
 
 **Example Census Data (Microdata / Detailed Wide Format):**
+
 | gender | age_group | ethnicity | freq |
 |:---|:---|:---|---:|
 | Female | 25-34 | B | 226 |

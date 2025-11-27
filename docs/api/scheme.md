@@ -1,5 +1,3 @@
-# Scheme creation
-
 ::: weightipy.scheme
     options:
       show_root_heading: true
