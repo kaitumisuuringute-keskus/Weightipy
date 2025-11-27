@@ -90,7 +90,7 @@ all = [
 Homepage = "https://github.com/kaitumisuuringute-keskus/Weightipy"
 Repository = "https://github.com/kaitumisuuringute-keskus/Weightipy"
 Issues = "https://github.com/kaitumisuuringute-keskus/Weightipy/issues"
-Documentation = "https://kaitumisuuringute-keskus.github.io/weightipy/"
+Documentation = "https://kaitumisuuringute-keskus.github.io/Weightipy/"
 
 [project.scripts]
 # No console scripts currently
