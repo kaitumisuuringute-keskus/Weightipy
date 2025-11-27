@@ -5,7 +5,7 @@ Weightipy is a modernized, lightweight, and high-performance library for weighti
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![License: Apache 2.0](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Documentation](https://img.shields.io/badge/docs-mkdocs-blue.svg)](https://kaitumisuuringute-keskus.github.io/weightipy/)
-[![Coverage](https://kaitumisuuringute-keskus.github.io/weightipy/badges/coverage.svg)](https://github.com/kaitumisuuringute-keskus/weightipy/actions)
+[![Coverage](https://kaitumisuuringute-keskus.github.io/Weightipy/badges/coverage.svg)](https://github.com/kaitumisuuringute-keskus/weightipy/actions)
 [![Tests](https://github.com/kaitumisuuringute-keskus/weightipy/workflows/Python%20Test%20Matrix/badge.svg)](https://github.com/kaitumisuuringute-keskus/weightipy/actions)
 
 ### Why Weightipy?
@@ -206,4 +206,5 @@ Weightipy is based on **Quantipy**.
 
 *   **Quantipy Creator:** Gary Nelson (Datasmoothie)
 *   **Contributors:** Alexander Buchhammer, Alasdair Eaglestone, James Griffiths, Kerstin Müller (YouGov), Birgir Hrafn Sigurðsson, Geir Freysson.
+
 *   **Weightipy:** Remi Sebastian Kits
