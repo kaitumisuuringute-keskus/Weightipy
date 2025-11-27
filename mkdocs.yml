@@ -65,9 +65,13 @@ markdown_extensions:
 nav:
   - Home: index.md
   - API Reference:
-    - Main Module: api/brms.md
-    - Helpers: api/helpers.md
+    - Scheme creation: api/scheme.md
+    - Weighting: api/weight.md
+    - Scheme validation: api/validate.md
     - Types: api/types.md
+    - Internals:
+      - Helpers: api/internal/helpers.md
+      - Rim class: api/internal/rim.md
+      - WeightEngine class: api/internal/weight_engine.md
   - Examples:
-    - Quick Start: examples/quickstart.md
-    - Advanced Usage: examples/advanced.md
+    - Nested schemes: examples/nested-schemes.md
