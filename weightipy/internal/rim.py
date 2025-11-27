@@ -1,4 +1,12 @@
 
+"""
+RIM (Raking) weighting algorithm implementation.
+
+This module implements the core RIM (Iterative Proportional Fitting) algorithm
+used for survey weighting. It provides the Rim class for defining complex
+weighting schemes and the Rake class for executing the iterative algorithm.
+"""
+
 import re
 import warnings
 

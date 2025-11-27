@@ -1,4 +1,12 @@
 
+"""
+Internal helper functions for scheme manipulation.
+
+This module contains utility functions used internally by weightipy for
+normalizing and validating scheme dictionaries. These functions are not
+intended for direct use by end users.
+"""
+
 from weightipy.types import SimpleSchemeDict
 
 

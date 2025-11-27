@@ -200,3 +200,4 @@ Weightipy is based on **Quantipy**.
 
 *   **Quantipy Creator:** Gary Nelson (Datasmoothie)
 *   **Contributors:** Alexander Buchhammer, Alasdair Eaglestone, James Griffiths, Kerstin Müller (YouGov), Birgir Hrafn Sigurðsson, Geir Freysson.
+*   **Weightipy:** Remi Sebastian Kits

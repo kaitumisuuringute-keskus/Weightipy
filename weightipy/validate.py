@@ -1,4 +1,12 @@
 
+"""
+Validation utilities for weighting schemes.
+
+This module provides functions to validate survey dataframes against weighting
+schemes before applying weights. Validation checks include column existence,
+missing values, and category mismatches between the data and scheme definitions.
+"""
+
 from typing import Optional
 import pandas as pd
 

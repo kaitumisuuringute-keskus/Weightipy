@@ -1,3 +1,11 @@
+"""
+Core weighting functions.
+
+This module provides the main functions for applying weights to survey data
+using the RIM (Raking) algorithm. It includes functions to weight dataframes,
+return weight series, and calculate weighting efficiency metrics.
+"""
+
 import random
 from numbers import Number
 from typing import Dict, Mapping, TypedDict, Union, Optional, List, Any, cast
@@ -7,10 +15,6 @@ import pandas as pd
 from weightipy.internal.rim import Rim
 from weightipy.version import version as __version__
 from weightipy.internal.weight_engine import WeightEngine
-
-
-
-# Code
 
 def weight(df: pd.DataFrame, scheme: Rim, verbose=False) -> pd.Series:
     """

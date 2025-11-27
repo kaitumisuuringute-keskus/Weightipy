@@ -1,3 +1,11 @@
+"""
+Weight engine for managing and executing weighting schemes.
+
+This module provides the WeightEngine class which manages multiple weighting
+schemes and coordinates the execution of the RIM algorithm across different
+data segments and groups.
+"""
+
 import re
 
 import pandas as pd

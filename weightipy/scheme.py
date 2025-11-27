@@ -1,4 +1,13 @@
 
+"""
+Scheme creation and extraction utilities.
+
+This module provides functions to create and extract weighting schemes from
+various data formats. Schemes can be created from dictionaries, reference
+dataframes (microdata), or long-format aggregate tables. Both simple (flat)
+and segmented (nested) weighting schemes are supported.
+"""
+
 import random
 from typing import Dict, List, Optional, cast
 

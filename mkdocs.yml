@@ -44,7 +44,7 @@ plugins:
             show_root_heading: true
             show_root_full_path: false
             members_order: source
-            group_by_category: true
+            group_by_category: false
             show_category_heading: true
             show_if_no_docstring: false
 
