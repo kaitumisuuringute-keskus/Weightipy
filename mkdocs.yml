@@ -1,10 +1,10 @@
 site_name: Weightipy documentation
 site_description: Weightipy is a modernized, lightweight, and high-performance library for weighting survey data using the RIM (iterative raking) algorithm.
 site_author: Remi Sebastian Kits
-site_url: https://kaitumisuuringute-keskus.github.io/weightipy
+site_url: https://kaitumisuuringute-keskus.github.io/Weightipy
 
-repo_name: kaitumisuuringute-keskus/weightipy
-repo_url: https://github.com/kaitumisuuringute-keskus/weightipy
+repo_name: kaitumisuuringute-keskus/Weightipy
+repo_url: https://github.com/kaitumisuuringute-keskus/Weightipy
 
 theme:
   name: shadcn
