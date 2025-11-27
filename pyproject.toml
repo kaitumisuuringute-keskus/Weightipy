@@ -70,7 +70,7 @@ dev = [
     "mypy>=1.0.0",
     "isort>=5.12.0",
     "mkdocs>=1.5.0",
-    "mkdocs-shadcn",
+    "mkdocs-shadcn@git+https://github.com/asiffer/mkdocs-shadcn@30-search-indexing-broken",
     "mkdocstrings[python]>=0.24.0"
 ]
 
