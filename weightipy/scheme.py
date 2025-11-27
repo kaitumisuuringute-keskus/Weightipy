@@ -14,7 +14,9 @@ def scheme_from_dict(
     rim_params: Optional[Dict] = None
 ) -> Rim:
     """
-    Create a Rim scheme from a dictionary. Supports two formats:
+    Create a Rim scheme from a dictionary.
+    
+    Supports two formats:
     
     1. Simple Scheme (Flat):
        {
@@ -32,13 +34,19 @@ def scheme_from_dict(
          }
        }
 
-    Args:
-        distributions: Dictionary definition of the scheme
-        name: Name of the schema
-        rim_params: Parameters for the Rim class
+    Parameters
+    ----------
+    distributions : SchemeDict
+        Dictionary definition of the scheme
+    name : str, optional
+        Name of the schema
+    rim_params : dict, optional
+        Parameters for the Rim class
 
-    Returns:
-        Rim: A configured Rim object
+    Returns
+    -------
+    Rim
+        A configured Rim object
     """
     if rim_params is None:
         rim_params = {}
@@ -108,10 +116,10 @@ def scheme_dict_from_df(
     col_filter: Optional[str] = None
 ) -> SchemeDict:
     """
-    Extracts a weighting scheme dict from a reference microdata dataframe (row-per-record).
+    Extract a weighting scheme dict from a reference microdata dataframe.
 
-    This is useful when you have a representative dataset (e.g., Census microdata 
-    or a high-quality random sample) where every row represents the combination of all demographic features, 
+    This is useful when you have a representative dataset (e.g., Census microdata
+    or a high-quality random sample) where every row represents the combination of all demographic features,
     and you want to calculate targets dynamically based on its distributions.
 
     Expected Input Format (Microdata):
@@ -120,16 +128,23 @@ def scheme_dict_from_df(
     | 25-34 | Female | East   | 1.0         |
     | 65+   | Male   | West   | 2.5         |
 
-    Args:
-        df: The reference dataframe containing combinations of all demographic features.
-        cols_weighting: List of columns to calculate targets for (e.g. ['Age', 'Gender']).
-        col_freq: Column containing the weight or frequency of each row. 
-                  (For raw census data, this is often a column of 1s).
-        col_filter: Optional column for segmentation (e.g. 'Region').
-                    If provided, targets are calculated within each unique value of this column.
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The reference dataframe containing combinations of all demographic features
+    cols_weighting : list of str
+        List of columns to calculate targets for (e.g. ['Age', 'Gender'])
+    col_freq : str
+        Column containing the weight or frequency of each row.
+        (For raw census data, this is often a column of 1s)
+    col_filter : str, optional
+        Optional column for segmentation (e.g. 'Region').
+        If provided, targets are calculated within each unique value of this column
 
-    Returns:
-        SchemeDict
+    Returns
+    -------
+    SchemeDict
+        Dictionary containing the weighting scheme
     """
     if col_filter is None:
         distributions: SimpleSchemeDict = {}
@@ -179,9 +194,9 @@ def scheme_dict_from_long_df(
     col_filter: Optional[str] = None
 ) -> SchemeDict:
     """
-    Extracts a weighting scheme dict from a 'Long' or 'Tidy' aggregate dataframe.
+    Extract a weighting scheme dict from a 'Long' or 'Tidy' aggregate dataframe.
     
-    This is useful for census data where you have a table of totals rather 
+    This is useful for census data where you have a table of totals rather
     than individual rows.
     
     Expected Input Format:
@@ -189,15 +204,23 @@ def scheme_dict_from_long_df(
     | Age      | 18-24    | 500   | East                     |
     | Gender   | Male     | 480   | East                     |
 
-    Args:
-        df: The dataframe containing aggregate targets.
-        col_variable: Column name identifying the dimension (e.g. 'Age', 'Gender')
-        col_category: Column name identifying the group (e.g. '18-24', 'Male')
-        col_value: Column name identifying the target weight/count.
-        col_filter: Optional column for segmentation (e.g. 'Region')
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The dataframe containing aggregate targets
+    col_variable : str
+        Column name identifying the dimension (e.g. 'Age', 'Gender')
+    col_category : str
+        Column name identifying the group (e.g. '18-24', 'Male')
+    col_value : str
+        Column name identifying the target weight/count
+    col_filter : str, optional
+        Optional column for segmentation (e.g. 'Region')
 
-    Returns:
-        SchemeDict
+    Returns
+    -------
+    SchemeDict
+        Dictionary containing the weighting scheme
     """
     # 1. Handle Simple Scheme (No Filter)
     if col_filter is None:
@@ -261,10 +284,10 @@ def scheme_from_df(
     rim_params: Optional[Dict] = None
 ) -> Rim:
     """
-    Extracts a weighting scheme from a reference microdata dataframe (row-per-record).
+    Extract a weighting scheme from a reference microdata dataframe.
 
-    This is useful when you have a representative dataset (e.g., Census microdata 
-    or a high-quality random sample) where every row represents the combination of all demographic features, 
+    This is useful when you have a representative dataset (e.g., Census microdata
+    or a high-quality random sample) where every row represents the combination of all demographic features,
     and you want to calculate targets dynamically based on its distributions.
 
     Expected Input Format (Microdata):
@@ -273,18 +296,27 @@ def scheme_from_df(
     | 25-34 | Female | East   | 1.0         |
     | 65+   | Male   | West   | 2.5         |
 
-    Args:
-        df: The reference dataframe containing combinations of all demographic features.
-        cols_weighting: List of columns to calculate targets for (e.g. ['Age', 'Gender']).
-        col_freq: Column containing the weight or frequency of each row. 
-                  (For raw census data, this is often a column of 1s).
-        col_filter: Optional column for segmentation (e.g. 'Region').
-                    If provided, targets are calculated within each unique value of this column.
-        name: Name of the schema.
-        rim_params: Parameters for the Rim class.
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The reference dataframe containing combinations of all demographic features
+    cols_weighting : list of str
+        List of columns to calculate targets for (e.g. ['Age', 'Gender'])
+    col_freq : str
+        Column containing the weight or frequency of each row.
+        (For raw census data, this is often a column of 1s)
+    col_filter : str, optional
+        Optional column for segmentation (e.g. 'Region').
+        If provided, targets are calculated within each unique value of this column
+    name : str, optional
+        Name of the schema
+    rim_params : dict, optional
+        Parameters for the Rim class
 
-    Returns:
-        Rim
+    Returns
+    -------
+    Rim
+        A configured Rim object
     """
     scheme_definition = scheme_dict_from_df(
         df=df,
@@ -309,9 +341,9 @@ def scheme_from_long_df(
     rim_params: Optional[Dict] = None
 ) -> Rim:
     """
-    Extracts a weighting scheme from a 'Long' or 'Tidy' aggregate dataframe.
+    Extract a weighting scheme from a 'Long' or 'Tidy' aggregate dataframe.
     
-    This is useful for census data where you have a table of totals rather 
+    This is useful for census data where you have a table of totals rather
     than individual rows.
     
     Expected Input Format:
@@ -319,17 +351,27 @@ def scheme_from_long_df(
     | Age      | 18-24    | 500   | East                     |
     | Gender   | Male     | 480   | East                     |
 
-    Args:
-        df: The dataframe containing aggregate targets.
-        col_variable: Column name identifying the dimension (e.g. 'Age', 'Gender')
-        col_category: Column name identifying the group (e.g. '18-24', 'Male')
-        col_value: Column name identifying the target weight/count.
-        col_filter: Optional column for segmentation (e.g. 'Region')
-        name: Name of the schema
-        rim_params: Parameters for the Rim class
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The dataframe containing aggregate targets
+    col_variable : str
+        Column name identifying the dimension (e.g. 'Age', 'Gender')
+    col_category : str
+        Column name identifying the group (e.g. '18-24', 'Male')
+    col_value : str
+        Column name identifying the target weight/count
+    col_filter : str, optional
+        Optional column for segmentation (e.g. 'Region')
+    name : str, optional
+        Name of the schema
+    rim_params : dict, optional
+        Parameters for the Rim class
 
-    Returns:
-        Rim
+    Returns
+    -------
+    Rim
+        A configured Rim object
     """
     scheme_definition = scheme_dict_from_long_df(
         df=df,

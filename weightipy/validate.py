@@ -8,23 +8,29 @@ from weightipy.types import SchemeDict
 
 
 def validate_scheme_dict(
-    df: pd.DataFrame, 
-    scheme: SchemeDict, 
+    df: pd.DataFrame,
+    scheme: SchemeDict,
     raise_error: bool = True
 ) -> Optional[pd.DataFrame]:
     """
-    Validates a dataframe against a scheme dictionary.
+    Validate a dataframe against a scheme dictionary.
     
     Checks if Data matches the Scheme (Columns, Categories, NaNs).
 
-    Args:
-        df: The survey dataframe to check.
-        scheme: The dictionary defining the weighting scheme.
-        raise_error: If True, raises a ValueError on the first Critical issue found.
-                     If False, returns a DataFrame report of all issues.
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The survey dataframe to check
+    scheme : SchemeDict
+        The dictionary defining the weighting scheme
+    raise_error : bool, default True
+        If True, raises a ValueError on the first Critical issue found.
+        If False, returns a DataFrame report of all issues
 
-    Returns:
-        pd.DataFrame (if raise_error=False)
+    Returns
+    -------
+    pd.DataFrame or None
+        DataFrame report of all issues if raise_error=False, None otherwise
     """
     issues = []
 
@@ -57,13 +63,29 @@ def validate_scheme_dict(
 
 
 def validate_scheme(
-    df: pd.DataFrame, 
-    scheme: Rim, 
+    df: pd.DataFrame,
+    scheme: Rim,
     raise_error: bool = True
 ) -> Optional[pd.DataFrame]:
     """
-    Validates a dataframe against a Rim scheme object.
+    Validate a dataframe against a Rim scheme object.
+    
     Checks for Columns, NaNs, and Category mismatches.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The survey dataframe to check
+    scheme : Rim
+        The Rim scheme object defining the weighting scheme
+    raise_error : bool, default True
+        If True, raises a ValueError on the first Critical issue found.
+        If False, returns a DataFrame report of all issues
+
+    Returns
+    -------
+    pd.DataFrame or None
+        DataFrame report of all issues if raise_error=False, None otherwise
     """
     issues = []
 

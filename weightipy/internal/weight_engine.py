@@ -48,13 +48,10 @@ class WeightEngine:
         - Maximum weight factor
         - Weight factor ratio
 
-        Parameters
-        ----------
-        self : self
-
         Returns
         -------
-        None
+        pd.DataFrame
+            DataFrame with weight metrics for each scheme and group
         """
 
         # List to store each report series for later concatenation
@@ -213,6 +210,17 @@ class WeightEngine:
 
     def _find_filter_variables(self, filter_expression):
         """
+        Find all column names referenced in a filter expression.
+
+        Parameters
+        ----------
+        filter_expression : str
+            The filter expression to parse
+
+        Returns
+        -------
+        list of str
+            List of column names found in the filter expression
         """
         filter_variables = []
         for col in self._df.columns:

@@ -9,3 +9,8 @@ class SegmentedSchemeDict(TypedDict):
     segments: Mapping[str, SimpleSchemeDict]
 
 SchemeDict = Union[SimpleSchemeDict, SegmentedSchemeDict]
+
+
+__all__ = [
+    "SimpleSchemeDict", "SegmentedSchemeDict", "SchemeDict"
+]

@@ -70,7 +70,7 @@ dev = [
     "mypy>=1.0.0",
     "isort>=5.12.0",
     "mkdocs>=1.5.0",
-    "mkdocs-material>=9.0.0",
+    "mkdocs-shadcn",
     "mkdocstrings[python]>=0.24.0"
 ]
 

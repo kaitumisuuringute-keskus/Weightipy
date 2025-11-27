@@ -279,10 +279,25 @@ class Rim:
     @deprecated("Internal API; will be removed in Weightipy 0.5.")
     def report(self, group=None):
         """
-        Returns the report for the specified group or all groups if no group is specified.
+        Return the report for the specified group or all groups.
 
         Requires verbose to be set to True on the Rim class. This is disabled by default
         for performance reasons.
+
+        Parameters
+        ----------
+        group : str, optional
+            Name of the group to get the report for. If None, returns reports for all groups
+
+        Returns
+        -------
+        dict
+            Dictionary containing the report(s)
+
+        Raises
+        ------
+        ValueError
+            If verbose is not enabled on the Rim class
         """
         if not self.verbose:
             raise ValueError("Verbose must evaluate to True on the Rim class to generate a report."
@@ -358,11 +373,16 @@ class Rim:
         Parameters
         ----------
         group_targets : dict
-            A dictionary mapping of group names to the desired proportions.
+            A dictionary mapping of group names to the desired proportions
 
         Returns
         -------
         None
+
+        Raises
+        ------
+        ValueError
+            If group_targets is not a dictionary
         """
         if isinstance(group_targets, dict):
             if all (group_targets[group] < 1 for group in group_targets):
@@ -461,13 +481,13 @@ class Rim:
     @deprecated("Internal API; will be removed in Weightipy 0.5.")
     def validate(self):
         """
-        Summary on scheme target variables to detect and handle missing data.
+        Generate summary on scheme target variables to detect and handle missing data.
 
         Returns
         -------
-        df : pandas.DataFrame
+        pd.DataFrame
             A summary of missing entries and (rounded) mean/mode/median of
-            value codes per target variable.
+            value codes per target variable
         """
         df = self._df.copy()[self.target_cols]
         nans = df.isnull().sum()

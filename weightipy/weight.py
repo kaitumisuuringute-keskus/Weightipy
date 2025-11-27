@@ -14,16 +14,24 @@ from weightipy.internal.weight_engine import WeightEngine
 
 def weight(df: pd.DataFrame, scheme: Rim, verbose=False) -> pd.Series:
     """
-    Weight a dataframe using a Rim scheme. The dataframe must have
-    a column for each dimension in the scheme. String columns are
-    automatically converted to categorical, allowing easier processing.
+    Weight a dataframe using a Rim scheme.
+    
+    The dataframe must have a column for each dimension in the scheme.
+    String columns are automatically converted to categorical, allowing easier processing.
 
-    Args:
-        df:
-        scheme:
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The survey dataframe to weight
+    scheme : Rim
+        The Rim scheme object defining the weighting targets
+    verbose : bool, default False
+        If True, prints progress information
 
-    Returns:
-
+    Returns
+    -------
+    pd.Series
+        A series containing the calculated weights
     """
     df = df.copy()
     df["__identity__"] = range(len(df))
@@ -46,17 +54,26 @@ def weight(df: pd.DataFrame, scheme: Rim, verbose=False) -> pd.Series:
 
 def weight_dataframe(df: pd.DataFrame, scheme: Rim, weight_column="weights", verbose=False) -> pd.DataFrame:
     """
-    Weight a dataframe using a Rim scheme. The dataframe must have
-    a column for each dimension in the scheme. String columns are
-    automatically converted to categorical, allowing easier processing.
+    Weight a dataframe using a Rim scheme and return the weighted dataframe.
+    
+    The dataframe must have a column for each dimension in the scheme.
+    String columns are automatically converted to categorical, allowing easier processing.
 
-    Args:
-        df:
-        scheme:
-        weight_column:
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The survey dataframe to weight
+    scheme : Rim
+        The Rim scheme object defining the weighting targets
+    weight_column : str, default "weights"
+        Name of the column to store the calculated weights
+    verbose : bool, default False
+        If True, prints progress information
 
-    Returns:
-
+    Returns
+    -------
+    pd.DataFrame
+        The input dataframe with an additional weight column
     """
     df = df.copy()
     df["__identity__"] = range(len(df))
@@ -84,6 +101,22 @@ weight_df = weight_dataframe
 
 
 def weighting_efficiency(weights: pd.Series) -> float:
+    """
+    Calculate the weighting efficiency (Kish's effective sample size).
+    
+    This metric indicates how much the sample size is reduced due to weighting.
+    Higher values (closer to 100%) indicate more efficient weights.
+
+    Parameters
+    ----------
+    weights : pd.Series
+        Series containing the calculated weights
+
+    Returns
+    -------
+    float
+        The weighting efficiency as a percentage (0-100)
+    """
     sws = (weights.sum()) ** 2
     ssw = (weights ** 2).sum()
     return (sws / len(weights)) / ssw * 100

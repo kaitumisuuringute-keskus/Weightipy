@@ -7,7 +7,7 @@ repo_name: kaitumisuuringute-keskus/weightipy
 repo_url: https://github.com/kaitumisuuringute-keskus/weightipy
 
 theme:
-  name: material
+  name: shadcn
   palette:
     - scheme: default
       primary: indigo

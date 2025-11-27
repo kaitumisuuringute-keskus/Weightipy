@@ -2,6 +2,6 @@ pytest
 pytest-cov
 pytest-xdist # allows the use of multiple cores for testing
 mkdocs>=1.5.0
-mkdocs-material>=9.0.0
+mkdocs-shadcn
 mkdocstrings[python]>=0.24.0
 -e .
