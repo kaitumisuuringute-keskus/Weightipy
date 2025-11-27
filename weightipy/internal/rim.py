@@ -1,9 +1,20 @@
 
+"""
+RIM (Raking) weighting algorithm implementation.
+
+This module implements the core RIM (Iterative Proportional Fitting) algorithm
+used for survey weighting. It provides the Rim class for defining complex
+weighting schemes and the Rake class for executing the iterative algorithm.
+"""
+
 import re
+from typing import Optional
 import warnings
 
 import numpy as np
 import pandas as pd
+
+from typing_extensions import deprecated
 
 
 class Rim:
@@ -33,7 +44,7 @@ class Rim:
         self._group_targets = {}
 
         # Storage of weight (sub-)dataframe
-        self._df = None
+        self._df: Optional[pd.DataFrame] = None
 
         # Impute methods parameters
         self.dropna = dropna
@@ -140,6 +151,9 @@ class Rim:
         self.groups[gn][self._FILTER_DEF_ORG] = filter_def
 
     def _compute(self):
+        """
+        Internal API; will be removed in Weightipy 0.5.
+        """
         self._get_base_factors()
         self._df[self._weight_name()] = self._df[self._weight_name()].replace(0.00, 1.00)
         self._df[self._weight_name()] = self._df[self._weight_name()].replace(-1.00, np.nan)
@@ -168,6 +182,7 @@ class Rim:
         return self._df[self._weight_name()]
 
     def _get_base_factors(self):
+        """Internal API; will be removed in Weightipy 0.5."""
         wgt = self._weight_name()
         for group in self.groups:
             wdf = self._get_wdf(group)
@@ -198,6 +213,7 @@ class Rim:
         return None
 
     def _scale_total(self):
+        """Internal API; will be removed in Weightipy 0.5."""
         weight_var = self._weight_name()
         self._df[weight_var].replace(1.00, np.nan, inplace=True)
         unw_total = len(self._df[weight_var].dropna().index)
@@ -207,6 +223,7 @@ class Rim:
         self._df[weight_var].replace(0.00, 1.00, inplace=True)
 
     def _adjust_groups(self):
+        """Internal API; will be removed in Weightipy 0.5."""
         adj_w_vec = []
         for group in self.groups:
             w_vec = self._df.query(self.groups[group][self._FILTER_DEF])[self._weight_name()]
@@ -237,6 +254,7 @@ class Rim:
         return [list(target.keys())[0] for target in targets]
 
     def _get_wdf(self, group):
+        """Internal API; will be removed in Weightipy 0.5."""
         filters = self.groups[group][self._FILTER_DEF]
         targets = self.groups[group][self._TARGETS]
         target_vars = self._get_group_target_cols(targets)
@@ -252,6 +270,7 @@ class Rim:
         return wdf
 
     def _dropna(self):
+        """Internal API; will be removed in Weightipy 0.5."""
         if self.dropna:
             self._df.dropna(inplace=True)
         else:
@@ -270,10 +289,27 @@ class Rim:
 
     def report(self, group=None):
         """
-        Returns the report for the specified group or all groups if no group is specified.
+        Internal API; will be removed in Weightipy 0.5.
+
+        Return the report for the specified group or all groups.
 
         Requires verbose to be set to True on the Rim class. This is disabled by default
         for performance reasons.
+
+        Parameters
+        ----------
+        group : str, optional
+            Name of the group to get the report for. If None, returns reports for all groups
+
+        Returns
+        -------
+        dict
+            Dictionary containing the report(s)
+
+        Raises
+        ------
+        ValueError
+            If verbose is not enabled on the Rim class
         """
         if not self.verbose:
             raise ValueError("Verbose must evaluate to True on the Rim class to generate a report."
@@ -301,6 +337,7 @@ class Rim:
         return scheme_filter_cols
 
     def _minimize_columns(self, df, key, verbose=True):
+        """Internal API; will be removed in Weightipy 0.5."""
         self._df = df.copy()
         filter_cols = self._get_scheme_filter_cols()
         columns = list(set([key] + self.target_cols + filter_cols))
@@ -309,6 +346,7 @@ class Rim:
         self._check_targets(verbose)
 
     def dataframe(self, df, key_column=None):
+        """Internal API; will be removed in Weightipy 0.5."""
         all_filter_cols = self._get_scheme_filter_cols()
         columns = self._columns(add_columns=[key_column])
         columns.extend(all_filter_cols)
@@ -347,11 +385,16 @@ class Rim:
         Parameters
         ----------
         group_targets : dict
-            A dictionary mapping of group names to the desired proportions.
+            A dictionary mapping of group names to the desired proportions
 
         Returns
         -------
         None
+
+        Raises
+        ------
+        ValueError
+            If group_targets is not a dictionary
         """
         if isinstance(group_targets, dict):
             if all (group_targets[group] < 1 for group in group_targets):
@@ -375,6 +418,8 @@ class Rim:
 
     def _check_targets(self, verbose):
         """
+        Internal API; will be removed in Weightipy 0.5.
+
         Check correct weight variable input proportion lengths and sum of 100.
         """
 
@@ -448,13 +493,15 @@ class Rim:
 
     def validate(self):
         """
-        Summary on scheme target variables to detect and handle missing data.
+        Internal API; will be removed in Weightipy 0.5.
+
+        Generate summary on scheme target variables to detect and handle missing data.
 
         Returns
         -------
-        df : pandas.DataFrame
+        pd.DataFrame
             A summary of missing entries and (rounded) mean/mode/median of
-            value codes per target variable.
+            value codes per target variable
         """
         df = self._df.copy()[self.target_cols]
         nans = df.isnull().sum()

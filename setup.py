@@ -1,40 +1,14 @@
-#!/usr/bin/env python
+"""
+weightipy setup.py - Backward compatibility shim
 
-from pathlib import Path
+Modern configuration is now in pyproject.toml (PEP 517/518/621).
+This file exists only for backward compatibility with older tools.
 
-from setuptools import setup, find_packages
+For package metadata and dependencies, see pyproject.toml
+"""
 
-this_directory = Path(__file__).parent
-long_description = (this_directory / "README.md").read_text()
+from setuptools import setup
 
-versions = dict()
-
-precisions = dict()
-
-libs = ['numpy',
-        'scipy',
-        'pandas',
-        'decorator',
-        'watchdog',
-        'requests']
-
-
-def version_libs(libs, precisions, versions):
-    return [lib + precisions[lib] + versions[lib]
-            if lib in versions.keys() else lib
-            for lib in libs]
-
-
-INSTALL_REQUIRES = version_libs(libs, precisions, versions)
-
-setup(name='weightipy',
-      version='0.4.0',
-      author='Remi Sebastian Kits',
-      author_email='kaitumisuuringute.keskus@gmail.com',
-      packages=find_packages(exclude=['tests']),
-      include_package_data=True,
-      install_requires=INSTALL_REQUIRES,
-      long_description=long_description,
-      long_description_content_type='text/markdown'
-)
-
+# All configuration is now in pyproject.toml
+# This minimal setup() call allows legacy tools to work
+setup()

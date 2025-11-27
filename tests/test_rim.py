@@ -1,6 +1,6 @@
 import unittest
 
-from weightipy.rim import Rim
+from weightipy.internal.rim import Rim
 
 
 class TestScheme(unittest.TestCase):

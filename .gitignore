@@ -50,3 +50,5 @@ venv
 *.pclprof
 
 .idea
+
+__pycache__

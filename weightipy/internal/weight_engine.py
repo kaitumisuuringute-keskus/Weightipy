@@ -1,3 +1,11 @@
+"""
+Weight engine for managing and executing weighting schemes.
+
+This module provides the WeightEngine class which manages multiple weighting
+schemes and coordinates the execution of the RIM algorithm across different
+data segments and groups.
+"""
+
 import re
 
 import pandas as pd
@@ -48,13 +56,10 @@ class WeightEngine:
         - Maximum weight factor
         - Weight factor ratio
 
-        Parameters
-        ----------
-        self : self
-
         Returns
         -------
-        None
+        pd.DataFrame
+            DataFrame with weight metrics for each scheme and group
         """
 
         # List to store each report series for later concatenation
@@ -177,7 +182,7 @@ class WeightEngine:
 
     def add_scheme(self, scheme, key, verbose=True):
         if scheme.name in self.schemes:
-            print("Overwriting existing scheme '%s'.").format(scheme.name) 
+            print("Overwriting existing scheme '%s'.".format(scheme.name))
         self._resolve_filters(scheme, key)
         self.schemes[scheme.name] = {self._SCHEME: scheme, self._KEY: key}
         scheme._minimize_columns(self._df, key, verbose)
@@ -213,6 +218,17 @@ class WeightEngine:
 
     def _find_filter_variables(self, filter_expression):
         """
+        Find all column names referenced in a filter expression.
+
+        Parameters
+        ----------
+        filter_expression : str
+            The filter expression to parse
+
+        Returns
+        -------
+        list of str
+            List of column names found in the filter expression
         """
         filter_variables = []
         for col in self._df.columns:

@@ -4,3 +4,4 @@ pandas
 decorator
 watchdog
 requests
+typing-extensions
