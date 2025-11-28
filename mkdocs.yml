@@ -75,3 +75,6 @@ nav:
       - WeightEngine class: api/internal/weight_engine.md
   - Examples:
     - Nested schemes: examples/nested-schemes.md
+
+extra_javascript:
+  - static/plausible.js
