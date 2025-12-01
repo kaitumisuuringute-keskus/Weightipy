@@ -7,20 +7,7 @@ repo_name: kaitumisuuringute-keskus/Weightipy
 repo_url: https://github.com/kaitumisuuringute-keskus/Weightipy
 
 theme:
-  name: shadcn
-  palette:
-    - scheme: default
-      primary: indigo
-      accent: indigo
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - scheme: slate
-      primary: indigo
-      accent: indigo
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
+  name: material
   features:
     - navigation.instant
     - navigation.tracking
@@ -31,6 +18,31 @@ theme:
     - search.suggest
     - search.highlight
     - content.code.copy
+
+  font:
+    text: system-ui
+    code: JetBrains Mono
+  
+  palette:
+    - scheme: default        # light mode: white + neutral gray + black
+      primary: black         # used for links, accents
+      accent: gray
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate          # dark mode: near-black + muted gray
+      primary: black
+      accent: gray
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  
+  # Use simple, thin borders + flat feel
+  shadows:
+    elevation:
+      dp1: "0 0 0 1px rgba(15,23,42,.06)"
+      dp2: "0 0 0 1px rgba(15,23,42,.08)"
+      dp3: "0 0 0 1px rgba(15,23,42,.12)"
 
 plugins:
   - search
@@ -78,3 +90,5 @@ nav:
 
 extra_javascript:
   - static/plausible.js
+extra_css:
+  - static/shadcn-ish.css
