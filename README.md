@@ -8,6 +8,8 @@ Weightipy is a modernized, lightweight, and high-performance library for weighti
 [![Coverage](https://kaitumisuuringute-keskus.github.io/Weightipy/badges/coverage.svg)](https://github.com/kaitumisuuringute-keskus/Weightipy/actions)
 [![Tests](https://github.com/kaitumisuuringute-keskus/Weightipy/workflows/Python%20Test%20Matrix/badge.svg)](https://github.com/kaitumisuuringute-keskus/Weightipy/actions)
 
+> **⚠️ pandas 3.0 users:** Versions <0.4.2 are broken with pandas 3.0 (weights silently fail). Upgrade: `pip install weightipy>=0.4.2`
+
 ### Why Weightipy?
 - **Fast:** Runs up to 6x faster than Quantipy.
 - **Modern:** Supports Python 3.7+ and the latest Pandas/Numpy versions.
