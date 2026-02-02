@@ -1,6 +1,34 @@
 # Changelog
 
+## Version 0.4.2
+
+> [!CAUTION]
+> **Critical Compatibility Fix for pandas 3.0**
+> 
+> Versions 0.4.1 and earlier are **broken when used with pandas 3.0+**. The weighting algorithm silently fails, producing all `1.0` weights instead of calculated values. If you are using pandas 3.0, **upgrade to 0.4.2 immediately**.
+
+### Bug Fixes
+
+#### pandas 3.0 Copy-on-Write Compatibility
+Fixed critical incompatibilities with pandas 3.0's Copy-on-Write (CoW) behavior that caused the RIM weighting algorithm to silently fail.
+
+**Issue 1: Read-only NumPy arrays**
+- In pandas 3.0, `.values` returns read-only arrays due to CoW.
+- The raking algorithm's in-place weight modifications failed silently.
+- **Fix**: Added explicit `.copy()` when extracting the weights array for iteration.
+
+**Issue 2: Chained inplace operations**
+- Chained operations like `df['col'].replace(..., inplace=True)` no longer modify the original DataFrame in pandas 3.0.
+- This caused `_scale_total()` and `_dropna()` to silently do nothing.
+- **Fix**: Replaced chained inplace operations with explicit assignment (`df['col'] = df['col'].replace(...)`).
+
+**Files Changed:**
+* `weightipy/internal/rim.py`: Fixed `Rake.start()`, `Rim._scale_total()`, and `Rim._dropna()` methods.
+
+---
+
 ## Version 0.4.1
+
 
 ### Packaging & Build System
 
