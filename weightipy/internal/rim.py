@@ -215,12 +215,12 @@ class Rim:
     def _scale_total(self):
         """Internal API; will be removed in Weightipy 0.5."""
         weight_var = self._weight_name()
-        self._df[weight_var].replace(1.00, np.nan, inplace=True)
+        self._df[weight_var] = self._df[weight_var].replace(1.00, np.nan)
         unw_total = len(self._df[weight_var].dropna().index)
-        self._df[weight_var].replace(np.nan, 0.00, inplace=True)
+        self._df[weight_var] = self._df[weight_var].replace(np.nan, 0.00)
         scale_factor = float(unw_total) / float(self.total)
         self._df[weight_var] = self._df[weight_var] / scale_factor
-        self._df[weight_var].replace(0.00, 1.00, inplace=True)
+        self._df[weight_var] = self._df[weight_var].replace(0.00, 1.00)
 
     def _adjust_groups(self):
         """Internal API; will be removed in Weightipy 0.5."""
@@ -283,9 +283,9 @@ class Rim:
                 if method == "mean":
                     m = np.round(self._df[column].mean(), 0)
                     print(m)
-                    self._df[column].fillna(m, inplace=True)
+                    self._df[column] = self._df[column].fillna(m)
                 elif method == "mode":
-                    self._df[column].fillna(self._df[column].mode()[0], inplace=True)
+                    self._df[column] = self._df[column].fillna(self._df[column].mode()[0])
 
     def report(self, group=None):
         """
@@ -660,7 +660,7 @@ class Rake:
             if min_cap is not None:
                 min_cap -= 0.0001
 
-        weights = self.dataframe[self.weight_column_name].values
+        weights = self.dataframe[self.weight_column_name].values.copy()
 
         for iteration in range(1, self.max_iterations+1):
             old_weights = weights.copy()

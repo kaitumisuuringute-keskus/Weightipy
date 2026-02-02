@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "weightipy"
-version = "0.4.1"
+version = "0.4.2"
 description = "Weightipy is a modernized, lightweight, and high-performance library for weighting survey data using the RIM (iterative raking) algorithm."
 readme = "README.md"
 requires-python = ">=3.7"
